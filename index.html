@@ -11,7 +11,7 @@
       --text:#1f1f1f;
       --muted:#6d6d6d;
       --line:#dedad3;
-      --red:#d62027;
+      --red:#d6001c;
       --black:#212121;
       --white:#e7e3de;
       --good:#2e7d32;
@@ -256,8 +256,8 @@
       <div class="field">
         <label for="hexInput">Cor de fundo</label>
         <div class="row">
-          <input id="hexInput" type="text" value="#D62027" />
-          <input id="colorInput" type="color" value="#D62027" />
+          <input id="hexInput" type="text" value="#FFFFFF" />
+          <input id="colorInput" type="color" value="#FFFFFF" />
           <button id="runBtn">Analisar</button>
         </div>
       </div>
@@ -336,7 +336,7 @@
 
 <script>
 const COLORS = {
-  red:   { hex: "#d62027", label: "Vermelho" },
+  red:   { hex: "#d6001c", label: "Vermelho" },
   black: { hex: "#212121", label: "Preto" },
   white: { hex: "#e7e3de", label: "Branco" }
 };
@@ -359,7 +359,7 @@ const MONO = [
 ];
 
 const QUICK_SWATCHES = [
-  "#D62027","#E7E3DE","#212121","#6E44FF","#F5D94B","#F3EEE6","#0D3B66","#35C759","#FF6B35"
+  "#d6001c","#E7E3DE","#212121","#6E44FF","#F5D94B","#F3EEE6","#0D3B66","#35C759","#FF6B35"
 ];
 
 function hexToRgb(hex) {
@@ -504,7 +504,7 @@ function analyze() {
   const bg = normalizeHex(hexInput.value);
 
   if (!isValidHex(bg)) {
-    alert("Insere uma cor HEX válida, por exemplo: #D62027");
+    alert("Insere uma cor HEX válida, por exemplo: #d6001c");
     return;
   }
 
@@ -540,7 +540,7 @@ document.getElementById("colorInput").addEventListener("input", e => {
 });
 
 buildSwatches();
-updateUI("#D62027");
+updateUI("#FFFFFF");
 </script>
 </body>
 </html>
