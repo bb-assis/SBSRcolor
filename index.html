@@ -1,200 +1,546 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>SBSR Adaptive Logo Tool</title>
-<style>
-  :root {
-    --bg:#ffd1dc; --b1:#e7e3de; --b2:#212121; --panel:#ffffff; --text:#1f2937; --muted:#6b7280;
-    --line:#e5e7eb; --shadow:0 8px 24px rgba(0,0,0,.08);
-  }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family: Inter, Arial, sans-serif; background:#ececec; color:var(--text); }
-  .wrap { max-width:1100px; margin:0 auto; padding:20px; }
-  .card { background:var(--panel); border-radius:24px; overflow:hidden; box-shadow:var(--shadow); }
-  .preview { background:var(--bg); min-height:620px; display:grid; place-items:center; padding:40px; }
-  #logo { width:min(42vw,340px); height:auto; shape-rendering:geometricPrecision; display:block; }
-  #block1 { fill: var(--b1); }
-  #block2 { fill: var(--b2); }
-  .controls { padding:24px 28px 32px; }
-  .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:18px; }
-  .pill { display:inline-flex; align-items:center; gap:10px; border:1px solid #d1d5db; border-radius:999px; padding:12px 16px; background:#fff; font-weight:700; }
-  .swatch { width:28px; height:28px; border-radius:999px; border:1px solid rgba(0,0,0,.12); flex:none; }
-  input[type=text] { border:1px solid #d1d5db; border-radius:12px; padding:12px 14px; min-width:140px; font-size:16px; }
-  input[type=color] { width:52px; height:44px; border:none; background:none; padding:0; }
-  button, .chip { border:none; background:#111827; color:#fff; font-weight:700; border-radius:12px; padding:12px 16px; cursor:pointer; }
-  .chip { background:#f3f4f6; color:#111827; border:1px solid #d1d5db; padding:10px 12px; }
-  .small { color:var(--muted); font-size:14px; line-height:1.5; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:14px; margin-top:12px; }
-  .stat { border:1px solid var(--line); border-radius:16px; padding:14px; }
-  .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background:#f3f4f6; padding:2px 6px; border-radius:6px; }
-  #qualityWrap { margin-top:16px; border:1px solid var(--line); border-radius:16px; padding:16px; }
-  #qualityBarTrack { height:10px; background:#d9d9d9; border-radius:999px; overflow:hidden; }
-  #qualityBar { height:100%; width:0%; background:#212121; transition:width .25s ease, background .25s ease; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SBSR Adaptive Logo Tool</title>
+  <style>
+    :root{
+      --bg:#f3f1ee;
+      --panel:#ffffff;
+      --text:#1f1f1f;
+      --muted:#6d6d6d;
+      --line:#dedad3;
+      --red:#d62027;
+      --black:#212121;
+      --white:#e7e3de;
+      --good:#2e7d32;
+      --ok:#7cb342;
+      --warn:#ef6c00;
+      --bad:#c62828;
+      --shadow:0 12px 30px rgba(0,0,0,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:linear-gradient(180deg,#f7f5f2 0%, #efebe5 100%);
+      color:var(--text);
+      padding:32px;
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 380px 1fr;
+      gap:24px;
+    }
+    .card{
+      background:var(--panel);
+      border:1px solid rgba(0,0,0,.05);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .left{
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    h1{
+      font-size:24px;
+      line-height:1.1;
+      margin:0 0 6px 0;
+      letter-spacing:-0.02em;
+    }
+    .sub{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+      margin:0;
+    }
+    .field label{
+      display:block;
+      font-size:13px;
+      font-weight:600;
+      margin-bottom:8px;
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    input[type="text"]{
+      flex:1;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:14px 14px;
+      font-size:16px;
+      outline:none;
+    }
+    input[type="color"]{
+      width:54px;
+      height:46px;
+      border:none;
+      padding:0;
+      background:none;
+      cursor:pointer;
+    }
+    button{
+      border:none;
+      border-radius:12px;
+      padding:14px 16px;
+      background:var(--black);
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .swatches{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .swatch{
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:2px solid rgba(0,0,0,.08);
+      cursor:pointer;
+    }
+    .mini{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .right{
+      display:grid;
+      grid-template-rows:auto auto 1fr;
+      gap:18px;
+      padding:18px;
+    }
+    .preview-shell{
+      border-radius:18px;
+      border:1px solid rgba(0,0,0,.06);
+      overflow:hidden;
+      background:#ddd;
+      min-height:330px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+    }
+    .preview-inner{
+      width:100%;
+      height:330px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:background .2s ease;
+    }
+    #logo{
+      width:min(72%, 430px);
+      height:auto;
+      display:block;
+      shape-rendering:geometricPrecision;
+    }
+    .grid2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+    .panel{
+      border:1px solid rgba(0,0,0,.06);
+      border-radius:16px;
+      padding:16px;
+      background:#fff;
+    }
+    .panel h3{
+      margin:0 0 10px 0;
+      font-size:15px;
+    }
+    .choice{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-top:10px;
+    }
+    .chip{
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      border:1px solid rgba(0,0,0,.09);
+      flex:0 0 auto;
+    }
+    .choice strong{
+      display:block;
+      font-size:14px;
+    }
+    .choice span{
+      color:var(--muted);
+      font-size:13px;
+    }
+    .meter-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+      gap:10px;
+    }
+    .meter{
+      height:12px;
+      background:#e8e3db;
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .meter > div{
+      height:100%;
+      width:0%;
+      background:var(--black);
+      transition:all .25s ease;
+    }
+    .details{
+      margin-top:10px;
+      font-size:14px;
+      line-height:1.6;
+      color:#333;
+    }
+    .note{
+      border-left:4px solid #d0cbc4;
+      padding:10px 12px;
+      background:#f7f4ef;
+      border-radius:10px;
+      font-size:13px;
+      color:#4f4b45;
+      line-height:1.5;
+    }
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:12px;
+      font-weight:700;
+      background:#f1efe9;
+      color:#333;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:999px;background:currentColor;
+    }
+    code{
+      background:#f3f0ea;
+      padding:2px 6px;
+      border-radius:6px;
+      font-size:12px;
+    }
+    @media (max-width: 900px){
+      body{padding:16px}
+      .wrap{grid-template-columns:1fr}
+      .preview-inner{height:280px}
+      .grid2{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="card">
-    <div class="preview" id="preview">
-      <svg id="logo" viewBox="0 0 595.28 841.89" xmlns="http://www.w3.org/2000/svg">
-<g id="block1">
-<g>
-<path d="M514.46,308.12c-10.53-11.27-23-15.14-37.03-11.5-11.24,2.91-21.84,10.02-33.06,17.53-22.07,14.79-37.79,23.81-54.59,14.84-.72-.4-1.39-.82-1.99-1.29-.18-.14-.36-.28-.54-.43-8.51-7.32-3.76-22.22-3.57-22.83l68.1-198.43-18.58,1.55-65.69,191.37c-.22.7-2.04,6.25-2.32,13.48-24.73-14.01-53.3-22.02-83.71-22.02-37.89,0-72.95,12.44-101.28,33.44,1.41-14.84,1.16-30.34.9-46.17-.34-21.68-.69-44.1,2.78-67.58,3.94-20.08,15.59-67.45,39.36-78.18,5.94-2.69,11.34-2.51,13.62-.41,1.95,1.81,2.5,3.53,2.47,11.31-.03,7.61-1.61,16.63-2.75,23.22-.79,4.53-1.37,7.81-1.44,10.25-.01.52-.05,1.17-.1,1.95-.33,6.04-1.12,20.18,3.02,35.53,5.29,19.56,16.57,34.72,33.52,45.05,29.62,18.05,47.74,3.93,55.91-6.1,4.21-5.18,6.4-9.51,9.42-16.68l.12-.27,29.46-85.69-18.6,1.56-26.83,78.03c-2.69,6.36-4.17,9.03-6.82,12.27-5.34,6.56-14.66,13.95-33.77,2.31-30.93-18.85-29.01-53.63-28.37-65.06.04-.96.09-1.75.1-2.37.05-1.23.66-4.74,1.2-7.85,3-17.18,7.54-43.15-7.92-52.2-8.24-4.81-19.19-4.97-29.27-.41-15.71,7.09-36.99,28.59-49.12,90.66l-.07.37c-3.72,24.95-3.34,48.14-2.99,70.56.37,23.14.71,44.46-3.95,63.38-1.27,5.18-2.92,10.18-5.04,14.99-1.42,3.2-3.04,6.32-4.91,9.35-2.8,4.55-6.15,8.9-10.15,13.04-1.38,1.43-2.75,2.86-4.12,4.29-4.08,4.27-8.05,8.5-11.9,12.72h0c-31.38,34.46-53.86,68.04-54.57,117.98-.79,54.77,40.05,145.44,155.13,175.07l-1.62-18.13c-101.06-28.65-137.13-108.31-136.44-156.69.43-30.02,8.98-53.08,26.3-77.49-1.15,7.98-1.75,16.14-1.75,24.45,0,64.17,35.64,120.18,88.17,149.26l-1.89-21.08c-41.65-27.45-69.21-74.66-69.21-128.18,0-19.68,3.73-38.51,10.52-55.82h0c4.29-4.68,8.84-9.51,13.68-14.52,11.83-12.29,18.93-25.86,23.13-40.38,27.55-26.43,64.95-42.7,106.07-42.7,35.66,0,68.52,12.23,94.59,32.71.02.03.04.04.06.06.59.45,1.17.91,1.74,1.38,13.59,11.01,25.27,24.29,34.45,39.25,9.18,14.97,15.87,31.61,19.48,49.37-11.7,18.98-17.73,46.82-13.7,100.39-.77,1.51-1.57,3.01-2.39,4.49l19.73-1.76c-.73-8.74-1.21-16.73-1.44-24.04-.33-10.49-.16-19.6.46-27.6.18-2.28.39-4.48.64-6.59.26-2.11.54-4.14.86-6.09.33-1.95.68-3.82,1.07-5.61,1.18-5.4,2.65-10.14,4.41-14.4,2.34-5.67,5.18-10.48,8.44-14.82,6.11-8.12,13.72-14.59,22.39-21.96,7.53-6.39,16.04-13.63,24.87-22.97,46.36-49.18,18.52-79.9,17.32-81.16ZM484.72,377.56c-8.18,8.66-15.97,15.28-23.49,21.67-5.67,4.82-11.04,9.37-15.96,14.28-6.97-24.06-19.11-45.94-35.13-64.37,16.09-2.28,30.93-12.21,43.74-20.8,24.46-16.4,35.68-21.78,48.06-8.62.99,1.17,17.29,21.23-17.22,57.84Z"/>
-<g>
-<path d="M391.5,455.35l-15.87,1.37-15.6,29.64-2.43-28.08-14.77,1.28,5.48,63.29,14.77-1.28-2.59-29.86,18.49,22.67c2.96,3.6,4.89,5.39,8.72,5.06l12.84-1.11-26.12-31.95,17.07-31.03Z"/>
-<path d="M289.51,496.12c1.59,18.41,16,31.7,35.94,29.97,5.05-.44,9.69-1.61,14.22-4.96l-1.2-13.85c-4.86,3.94-9.83,5.45-14.14,5.82-9.96.86-18.31-5.62-19.41-18.32-1.1-12.69,6.01-20.54,15.97-21.4,4.31-.37,9.48.29,14.93,3.32l-1.2-13.88c-5.03-2.49-9.8-2.85-14.86-2.41-19.93,1.73-31.84,17.29-30.25,35.71Z"/>
-<path d="M302.93,410.98c-.91-10.45-6.45-20.11-23.62-18.62l-21.32,1.85,5.48,63.32,14.79-1.28-1.46-16.9,5.71-2.85c16.65-7.87,21.2-16.47,20.42-25.51ZM281.51,425.01l-5.7,2.89-2.04-23.6,3.49-.3c4.88-.42,10.49.84,11.13,8.25.47,5.39-.56,8.99-6.88,12.76Z"/>
-<path d="M251.26,466.42c-17.95,1.55-28.2,17.22-26.63,35.35,1.57,18.11,14.36,31.8,32.31,30.24,17.93-1.55,28.2-17.23,26.63-35.35-1.57-18.12-14.38-31.8-32.31-30.24ZM255.84,519.37c-9.09.79-15.68-7.71-16.64-18.8-.96-11.1,4.07-20.6,13.16-21.38,9.11-.79,15.72,7.69,16.68,18.8.96,11.1-4.09,20.6-13.2,21.39Z"/>
-<path d="M210.43,501.04c5.02-3.88,5.41-10.24,5.17-12.98-1.05-12.09-11.79-16.45-22.27-15.54l-22.42,1.94,5.48,63.29,25.91-2.24c14.2-1.23,20.44-10.41,19.6-20.18-.62-7.19-4.43-12.41-11.47-14.29ZM186.57,483.39l6.07-.53c6.22-.54,8.29,2.72,8.67,7.1.32,3.7-.2,8.41-6.09,8.92l-7.25.63-1.4-16.13ZM198.53,525.04l-8.28.72-1.47-16.92,7.85-.68c5.11-.44,9.34.38,9.93,7.17.59,6.84-3.02,9.27-8.04,9.71Z"/>
-<path d="M173.77,454.34c-4.32.59-10.94-.4-18.94-3.75l1.13,13.01c4.84,2.56,13.8,3.54,21.33,2.58,13.3-1.69,20.37-10.8,19.44-21.62-2.03-23.4-28.41-14.01-29.4-25.41-.26-3.03,1.88-7,8.14-7.8,6.27-.81,11.8,1.37,16.25,3.52l-1.09-12.53c-4.66-1.85-9.88-3.22-19.51-1.98-13.76,1.75-20.28,12.17-19.49,21.32,1.99,22.99,27.91,13.48,28.98,25.79.29,3.32-1.48,6.21-6.83,6.86Z"/>
-<path d="M229.78,461.65c14.34-1.24,22.93-9.16,21.31-27.91l-3.35-38.65-14.78,1.28,3.35,38.63c.72,8.31-1.23,12.69-7.69,13.25-6.43.56-9.12-3.42-9.84-11.73l-3.35-38.63-14.74,1.28,3.35,38.65c1.62,18.74,11.39,25.07,25.74,23.83Z"/>
-<polygon points="348.76 438.6 327.53 440.44 326.13 424.29 341.39 422.97 340.48 412.4 325.22 413.72 324.03 400.04 345.26 398.2 344.26 386.74 308.28 389.85 313.77 453.17 349.75 450.05 348.76 438.6"/>
-<path d="M371.36,429.83c1.43-.6,2.78-1.18,4.1-1.75l9.25,13.15c2.61,3.37,4.85,5.38,8.7,5.04l11.47-.99-17.03-24.13c8.05-5.81,10.31-11.63,9.73-18.33-.9-10.44-6.42-20.12-23.6-18.63l-21.28,1.84,5.48,63.3,14.76-1.28-1.58-18.21ZM368.44,396.14l3.51-.3c4.88-.42,10.44.85,11.08,8.23.58,6.75-1.04,10.4-12.57,15.39l-2.02-23.32Z"/>
-</g>
-</g>
-</g>
-<g id="block2">
-<path d="M516.93,634.1l-9.6-107.18-71.89,6.44-19.73,1.76-221.47,19.83,3.05,34.12,1.89,21.08,4.65,51.98,18.16-1.62.91,10.11,1.62,18.13,4.18,46.72,276.78-24.79-6.71-74.95,18.16-1.63ZM410.03,623.98l-1.04-11.63,19.1-1.79,1.09,11.63-19.15,1.79ZM413.12,649.51c-4.61-2.61-9.91-3.74-15.19-3.25-2.89.26-5.53,1.12-7.81,2.48l-1.27-14.12c2.45-.75,5.06-1.28,7.83-1.54,5.17-.69,10.42.12,15.13,2.35l1.31,14.08ZM407.52,595.95l-.96-10.73,12.96-1.2.99,10.72-12.99,1.21ZM446.92,555.79l5.75,64.19-14.81,1.45-6-64.23,15.06-1.41ZM423.18,557.93l1.08,11.65-18.94,1.76-1.04-11.65,18.9-1.76ZM401.57,559.95l5.75,64.28-14.65,1.37-6-64.26,14.9-1.39ZM350.96,564.75l5.76,64.28-14.8,1.38-6-64.26,15.04-1.4ZM314.03,607.7l-3.66-39.19,15-1.4,3.66,39.19c1.72,18.47-6.45,26.55-20.26,28.28l-1.21-13.56c5.54-1.06,7.2-5.47,6.47-13.32ZM292.57,570.16l3.66,39.19c.72,7.77,3.11,11.79,8.62,11.89l1.21,13.59c-13.72.82-23.08-5.72-24.79-24.08l-3.66-39.19,14.96-1.4ZM273.85,617.66c1,10.69-5.78,19.78-18.61,21.9l-1.14-12.74c2.75-1.28,3.67-3.59,3.43-6.09-.28-3-2.01-4.7-4.5-5.9l-1.46-16.29c8.41,2.31,20.8,3.26,22.28,19.12ZM252.55,639.93c-7.25.7-15.4-.29-19.98-2.66l-1.22-13.22c8.18,3.35,14.9,4.31,19.3,3.68.28-.03.54-.07.79-.12l1.11,12.32ZM267.41,574.81l1.18,12.72c-4.57-2.14-10.22-4.31-16.56-3.45-.62.08-1.19.2-1.72.34l-1.05-11.69c8.71-.95,13.69.35,18.15,2.08ZM246.56,573.12l1.11,12.33c-2.99,1.67-4.06,4.38-3.85,6.6.27,2.92,2.19,4.48,4.94,5.57l1.44,16.13c-8.29-2.62-20.8-3.22-22.27-19.02-.84-9.06,5.38-19.36,18.63-21.61ZM251.58,712.62l-6-64.23,15.06-1.4,5.74,64.18-14.8,1.45ZM287.36,709.22c-3.92.36-6.2-1.66-8.87-5.07l-9.49-13.29c-.54.25-1.09.49-1.64.73l-.95-10.61c9.34-4.56,10.7-8.22,10.11-14.58-.69-7.5-6.36-8.76-11.3-8.28l-.85.08-1.03-11.47,3.86-.36c17.44-1.68,23.1,8.09,24.1,18.7.63,6.8-1.63,12.73-9.77,18.68l17.45,24.38-11.62,1.09ZM300.31,675.69c-1.66-17.93,8.12-33.58,25.56-35.86l1.16,13c-8.4,1.61-12.97,10.89-11.98,21.6.99,10.68,7.06,18.94,15.62,19.03l1.15,12.89c-17.39.84-29.84-12.81-31.51-30.66ZM334.53,706.1l-1.15-12.89c8.46-1.61,12.96-10.87,11.96-21.6-1-10.66-7.12-18.91-15.6-19.03l-1.16-13c17.4-.83,29.84,12.71,31.5,30.59,1.67,17.96-8.13,33.63-25.55,35.93ZM357.8,610.6l-1.05-11.7,3.24-1.67c6.41-3.88,7.41-7.54,6.91-13.01-.71-7.53-6.42-8.77-11.37-8.31l-.83.07-1.03-11.49,3.87-.36c17.42-1.67,23.12,8.11,24.11,18.7.85,9.16-3.71,17.95-20.54,26.09l-3.31,1.68ZM366.21,669.56c-1.43-15.2,6.2-28.53,20-34.01l1.35,15.08c-4.17,3.75-6.5,9.73-5.77,17.47.72,7.68,4.06,13.08,8.76,16.01l1.36,15.1c-14.41-2.89-24.28-14.53-25.7-29.65ZM402.87,699.72c-2.85.27-5.58.23-8.19-.08l-1.27-14.12c2.52.95,5.31,1.32,8.23,1.05,5.28-.5,10.27-2.6,14.32-6.02l1.31,14.07c-4.2,3.06-9.21,4.84-14.4,5.1ZM426.07,696.31l-6.01-64.24,15-1.41.55,5.89,5.23,58.38-14.77,1.38ZM466.06,692.6c-3.9.37-5.87-1.44-8.9-5.14l-15.99-19.33-1.19-13.33,13.34-25.81,16.11-1.51-17.12,31.63,26.77,32.27-13.02,1.22ZM473.64,618.03c-3.91.36-6.19-1.66-8.87-5.07l-9.48-13.29c-.55.24-1.09.49-1.65.73l-.95-10.61c9.35-4.57,10.7-8.23,10.12-14.58-.7-7.5-6.36-8.76-11.31-8.28l-.85.07-1.02-11.46,3.85-.36c17.45-1.68,23.1,8.09,24.1,18.7.63,6.8-1.63,12.73-9.77,18.68l17.46,24.38-11.63,1.09Z"/>
-</g>
-</svg>
-    </div>
-    <div class="controls">
-      <div class="row">
-        <input id="hexInput" type="text" value="#FFD1DC" spellcheck="false" />
-        <input id="colorInput" type="color" value="#ffd1dc" />
-        <button id="applyBtn">Aplicar fundo</button>
-      </div>
-      <div class="row">
-        <button class="chip" data-hex="#3A7BD5">Azul médio</button>
-        <button class="chip" data-hex="#18B676">Verde saturado</button>
-        <button class="chip" data-hex="#E84AA5">Magenta</button>
-        <button class="chip" data-hex="#F3E66D">Amarelo claro</button>
-      </div>
-      <div class="row" id="resultPills"></div>
-
-      <div id="qualityWrap">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <strong>Qualidade de contraste</strong>
-          <span id="qualityLabel">-</span>
-        </div>
-        <div id="qualityBarTrack">
-          <div id="qualityBar"></div>
-        </div>
-        <div id="contrastDetails" class="small" style="margin-top:10px;"></div>
+  <div class="wrap">
+    <section class="card left">
+      <div>
+        <h1>SBSR Adaptive Logo Tool</h1>
+        <p class="sub">Insere a cor de fundo e a ferramenta recomenda a melhor aplicação cromática da marca, respeitando as combinações preferenciais e evitando soluções críticas sempre que possível.</p>
       </div>
 
-      <div class="grid">
-        <div class="stat"><strong>Bloco 1</strong><br><span class="small">guitarra + SUPER BOCK</span><div id="b1Text"></div></div>
-        <div class="stat"><strong>Bloco 2</strong><br><span class="small">caixa + SUPER ROCK</span><div id="b2Text"></div></div>
-        <div class="stat"><strong>Combinação</strong><div id="comboText"></div></div>
-        <div class="stat"><strong>Nota</strong><div id="noteText"></div></div>
+      <div class="field">
+        <label for="hexInput">Cor de fundo</label>
+        <div class="row">
+          <input id="hexInput" type="text" value="#3A7BD5" />
+          <input id="colorInput" type="color" value="#3a7bd5" />
+          <button id="runBtn">Analisar</button>
+        </div>
       </div>
-      <p class="small" style="margin-top:16px;">A ferramenta respeita esta ordem de preferência: 1) bloco 1 branco + bloco 2 preto, 2) bloco 1 vermelho + bloco 2 preto, 3) bloco 1 branco + bloco 2 vermelho. Dentro dessa hierarquia, escolhe a primeira combinação que mantém leitura aceitável.</p>
-    </div>
+
+      <div class="field">
+        <label>Swatches rápidos</label>
+        <div class="swatches" id="swatches"></div>
+      </div>
+
+      <div class="note">
+        Preferências de marca, por ordem:
+        <br><code>block1 branco / block2 preto</code>
+        <br><code>block1 vermelho / block2 preto</code>
+        <br><code>block1 branco / block2 vermelho</code>
+        <br><br>Se todas forem críticas, a ferramenta tenta combinações alternativas e, no limite, versões monocromáticas.
+      </div>
+    </section>
+
+    <section class="card right">
+      <div class="preview-shell">
+        <div class="preview-inner" id="previewBg">
+          <svg id="logo" viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg" aria-label="SBSR logo preview">
+            <g id="block1">
+              <path d="M86 177c-20 0-36-16-36-36V76c0-20 16-36 36-36h78c20 0 36 16 36 36v65c0 20-16 36-36 36H86Zm0-26h78c5.5 0 10-4.5 10-10V76c0-5.5-4.5-10-10-10H86c-5.5 0-10 4.5-10 10v65c0 5.5 4.5 10 10 10Z"/>
+              <circle cx="125" cy="108.5" r="23"/>
+              <rect x="118" y="131" width="14" height="56" rx="7"/>
+              <rect x="94" y="182" width="62" height="14" rx="7"/>
+              <text x="244" y="102" font-size="46" font-weight="800" letter-spacing="-1.5" font-family="Arial, Helvetica, sans-serif">SUPER</text>
+              <text x="244" y="153" font-size="46" font-weight="800" letter-spacing="-1.5" font-family="Arial, Helvetica, sans-serif">BOCK</text>
+            </g>
+
+            <g id="block2">
+              <rect x="234" y="170" width="290" height="64" rx="10"/>
+              <text x="258" y="214" font-size="42" font-weight="800" letter-spacing="-1.2" font-family="Arial, Helvetica, sans-serif">SUPER ROCK</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <h3>Aplicação recomendada</h3>
+          <div class="choice">
+            <div class="chip" id="chip1"></div>
+            <div>
+              <strong>Bloco 1</strong>
+              <span id="label1">-</span>
+            </div>
+          </div>
+          <div class="choice">
+            <div class="chip" id="chip2"></div>
+            <div>
+              <strong>Bloco 2</strong>
+              <span id="label2">-</span>
+            </div>
+          </div>
+          <div style="margin-top:14px">
+            <span class="status" id="strategyBadge"><span class="dot"></span><span id="strategyText">-</span></span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="meter-head">
+            <strong>Qualidade de contraste</strong>
+            <span id="qualityLabel">-</span>
+          </div>
+          <div class="meter"><div id="qualityBar"></div></div>
+          <div class="details" id="contrastDetails"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3 style="margin-top:0">Nota</h3>
+        <div class="details" id="noteText"></div>
+      </div>
+    </section>
   </div>
-</div>
+
 <script>
-const COLORS={red:'#d62027', black:'#212121', white:'#e7e3de'};
-const LABELS={red:'Vermelho', black:'Preto', white:'Branco'};
-const PRIORITY_COMBOS=[
-  {block1:'white', block2:'black'},
-  {block1:'red', block2:'black'},
-  {block1:'white', block2:'red'}
+const COLORS = {
+  red:   { hex: "#d62027", label: "Vermelho" },
+  black: { hex: "#212121", label: "Preto" },
+  white: { hex: "#e7e3de", label: "Branco" }
+};
+
+const PREFERRED = [
+  ["white", "black"],
+  ["red",   "black"],
+  ["white", "red"]
+];
+
+const ALTERNATIVE = [
+  ["black", "white"],
+  ["black", "red"],
+  ["red",   "white"]
+];
+
+const MONO = [
+  ["black", "black"],
+  ["white", "white"]
+];
+
+const QUICK_SWATCHES = [
+  "#3A7BD5","#009688","#FF4FA3","#6E44FF","#F5D94B","#111111","#F3EEE6","#0D3B66","#35C759","#FF6B35"
 ];
 
 function hexToRgb(hex) {
-  const h=(hex||'').replace('#','').trim();
-  if(!/^([0-9a-fA-F]{6})$/.test(h)) return null;
-  const n=parseInt(h,16);
-  return {r:(n>>16)&255,g:(n>>8)&255,b:n&255};
+  const clean = normalizeHex(hex);
+  const bigint = parseInt(clean.slice(1), 16);
+  return {
+    r: (bigint >> 16) & 255,
+    g: (bigint >> 8) & 255,
+    b: bigint & 255
+  };
 }
-function luminance(r,g,b) {
-  const a=[r,g,b].map(v=>{v/=255; return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055,2.4);});
-  return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
+
+function normalizeHex(hex) {
+  let h = String(hex).trim();
+  if (!h.startsWith("#")) h = "#" + h;
+  if (h.length === 4) h = "#" + h.slice(1).split("").map(c => c + c).join("");
+  return h.toLowerCase();
 }
-function contrast(hex1,hex2) {
-  const rgb1=hexToRgb(hex1), rgb2=hexToRgb(hex2); if(!rgb1||!rgb2) return 0;
-  const L1=luminance(rgb1.r,rgb1.g,rgb1.b), L2=luminance(rgb2.r,rgb2.g,rgb2.b);
-  const bright=Math.max(L1,L2), dark=Math.min(L1,L2);
-  return (bright+0.05)/(dark+0.05);
+
+function isValidHex(hex) {
+  return /^#([0-9a-f]{6})$/i.test(normalizeHex(hex));
 }
-function getQuality(contrastA, contrastB) {
+
+function luminance(r, g, b) {
+  const a = [r, g, b].map(v => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+}
+
+function contrast(bgHex, fgHex) {
+  const rgb1 = hexToRgb(bgHex);
+  const rgb2 = hexToRgb(fgHex);
+  const L1 = luminance(rgb1.r, rgb1.g, rgb1.b);
+  const L2 = luminance(rgb2.r, rgb2.g, rgb2.b);
+  const bright = Math.max(L1, L2);
+  const dark = Math.min(L1, L2);
+  return (bright + 0.05) / (dark + 0.05);
+}
+
+function classify(contrastA, contrastB) {
   const minC = Math.min(contrastA, contrastB);
   const maxC = Math.max(contrastA, contrastB);
-  if (minC >= 4.5) return { label: 'Excelente', value: 100, color: '#2e7d32' };
-  if (maxC >= 4.5 && minC >= 3) return { label: 'Bom', value: 75, color: '#558b2f' };
-  if (minC >= 3) return { label: 'Sensível', value: 50, color: '#ef6c00' };
-  return { label: 'Crítico', value: 25, color: '#c62828' };
-}
-function choose(bg) {
-  let fallback=null;
-  let bestMin=-1;
-  for (const combo of PRIORITY_COMBOS) {
-    const contrastBlock1=contrast(bg, COLORS[combo.block1]);
-    const contrastBlock2=contrast(bg, COLORS[combo.block2]);
-    const minC=Math.min(contrastBlock1, contrastBlock2);
-    const maxC=Math.max(contrastBlock1, contrastBlock2);
-    const choice={...combo, contrastBlock1, contrastBlock2, minC, maxC};
-    if (minC >= 3) return choice;
-    if (minC > bestMin || (minC === bestMin && maxC > (fallback?.maxC ?? -1))) {
-      bestMin=minC;
-      fallback=choice;
-    }
-  }
-  return fallback;
-}
-function pill(label,hex,text) {
-  return `<div class="pill"><span class="swatch" style="background:${hex}"></span>${label}&nbsp;<span class="kbd">${text}</span></div>`;
-}
-function update(bg) {
-  const choice=choose(bg);
-  document.documentElement.style.setProperty('--bg',bg);
-  document.documentElement.style.setProperty('--b1',COLORS[choice.block1]);
-  document.documentElement.style.setProperty('--b2',COLORS[choice.block2]);
 
-  document.getElementById('resultPills').innerHTML =
-    pill('Fundo', bg, bg.toUpperCase()) +
-    pill('Bloco 1', COLORS[choice.block1], LABELS[choice.block1]) +
-    pill('Bloco 2', COLORS[choice.block2], LABELS[choice.block2]);
+  if (minC >= 4.5) return { label: "Excelente", value: 100, color: "#2e7d32", critical: false };
+  if (maxC >= 4.5 && minC >= 3) return { label: "Bom", value: 75, color: "#7cb342", critical: false };
+  if (minC >= 3) return { label: "Sensível", value: 50, color: "#ef6c00", critical: false };
+  return { label: "Crítico", value: 25, color: "#c62828", critical: true };
+}
 
-  document.getElementById('b1Text').innerHTML=`<div class="small">${LABELS[choice.block1]} · contraste ${choice.contrastBlock1.toFixed(2)}:1</div>`;
-  document.getElementById('b2Text').innerHTML=`<div class="small">${LABELS[choice.block2]} · contraste ${choice.contrastBlock2.toFixed(2)}:1</div>`;
-  document.getElementById('comboText').innerHTML=`<div class="small">${LABELS[choice.block1]} + ${LABELS[choice.block2]}</div>`;
+function evaluatePair(bg, c1, c2, strategy) {
+  const contrast1 = contrast(bg, COLORS[c1].hex);
+  const contrast2 = contrast(bg, COLORS[c2].hex);
+  const quality = classify(contrast1, contrast2);
+  const minC = Math.min(contrast1, contrast2);
+  const maxC = Math.max(contrast1, contrast2);
 
-  const quality=getQuality(choice.contrastBlock1, choice.contrastBlock2);
-  document.getElementById('qualityLabel').textContent=quality.label;
-  document.getElementById('qualityBar').style.width=quality.value+'%';
-  document.getElementById('qualityBar').style.background=quality.color;
-  document.getElementById('contrastDetails').innerHTML=`
-    <div>Bloco 1: <strong>${LABELS[choice.block1]}</strong> · contraste ${choice.contrastBlock1.toFixed(2)}:1</div>
-    <div>Bloco 2: <strong>${LABELS[choice.block2]}</strong> · contraste ${choice.contrastBlock2.toFixed(2)}:1</div>
+  return {
+    block1: c1,
+    block2: c2,
+    contrast1,
+    contrast2,
+    quality,
+    score: (quality.critical ? 0 : 1000) + (minC * 100) + maxC,
+    strategy
+  };
+}
+
+function pickFromList(bg, list, strategyName) {
+  const results = list.map(([a,b]) => evaluatePair(bg, a, b, strategyName));
+  const nonCritical = results.filter(r => !r.quality.critical).sort((a,b) => b.score - a.score);
+  if (nonCritical.length) return nonCritical[0];
+  return results.sort((a,b) => b.score - a.score)[0];
+}
+
+function chooseRecommendation(bg) {
+  const preferred = pickFromList(bg, PREFERRED, "Combinação preferencial");
+  if (!preferred.quality.critical) return preferred;
+
+  const alternative = pickFromList(bg, ALTERNATIVE, "Combinação alternativa");
+  if (!alternative.quality.critical) return alternative;
+
+  const mono = pickFromList(bg, MONO, "Solução monocromática");
+  if (!mono.quality.critical) return mono;
+
+  const all = [
+    ...PREFERRED.map(([a,b]) => evaluatePair(bg, a, b, "Combinação preferencial")),
+    ...ALTERNATIVE.map(([a,b]) => evaluatePair(bg, a, b, "Combinação alternativa")),
+    ...MONO.map(([a,b]) => evaluatePair(bg, a, b, "Solução monocromática"))
+  ].sort((a,b) => b.score - a.score);
+
+  return {
+    ...all[0],
+    strategy: "Aplicação direta não recomendada"
+  };
+}
+
+function updateUI(bg) {
+  const rec = chooseRecommendation(bg);
+
+  document.getElementById("previewBg").style.background = bg;
+  document.getElementById("block1").setAttribute("fill", COLORS[rec.block1].hex);
+  document.getElementById("block2").setAttribute("fill", COLORS[rec.block2].hex);
+
+  document.getElementById("chip1").style.background = COLORS[rec.block1].hex;
+  document.getElementById("chip2").style.background = COLORS[rec.block2].hex;
+
+  document.getElementById("label1").textContent = `${COLORS[rec.block1].label} · ${COLORS[rec.block1].hex}`;
+  document.getElementById("label2").textContent = `${COLORS[rec.block2].label} · ${COLORS[rec.block2].hex}`;
+
+  document.getElementById("qualityLabel").textContent = rec.quality.label;
+  document.getElementById("qualityBar").style.width = rec.quality.value + "%";
+  document.getElementById("qualityBar").style.background = rec.quality.color;
+
+  document.getElementById("contrastDetails").innerHTML = `
+    <div>Bloco 1: <strong>${COLORS[rec.block1].label}</strong> · contraste <strong>${rec.contrast1.toFixed(2)}:1</strong></div>
+    <div>Bloco 2: <strong>${COLORS[rec.block2].label}</strong> · contraste <strong>${rec.contrast2.toFixed(2)}:1</strong></div>
   `;
 
-  let note='';
-  if (quality.label==='Excelente') note='Safe for direct use.';
-  else if (quality.label==='Bom') note='Boa combinação. Vale uma validação visual final.';
-  else if (quality.label==='Sensível') note='Funciona, mas está em zona sensível. Convém validar a leitura em escala real.';
-  else note='Nenhuma combinação preferencial ficou confortável. Considera versão protegida ou badge.';
-  document.getElementById('noteText').innerHTML=`<div class="small">${note}</div>`;
+  const strategyBadge = document.getElementById("strategyBadge");
+  const strategyText = document.getElementById("strategyText");
+  strategyText.textContent = rec.strategy;
+  strategyBadge.style.color = rec.quality.color;
+  strategyBadge.style.background = rec.quality.critical ? "#fbe9e7" : "#f4f7ef";
+
+  const note = document.getElementById("noteText");
+  if (rec.strategy === "Aplicação direta não recomendada") {
+    note.innerHTML = `Nenhuma combinação preferencial, alternativa ou monocromática saiu da zona crítica para este fundo. A recomendação aqui é <strong>não usar aplicação direta</strong>. Usa versão protegida, badge sólido ou intervenção no fundo.`;
+  } else if (rec.strategy === "Solução monocromática") {
+    note.innerHTML = `As combinações bicolor preferenciais e alternativas entraram em zona crítica. A melhor saída foi uma <strong>solução monocromática</strong>, porque evita um dos blocos abaixo da linha mínima de contraste.`;
+  } else if (rec.quality.label === "Sensível") {
+    note.innerHTML = `A combinação escolhida é usável, mas está numa zona sensível. Para peças pequenas, ecrãs de baixa qualidade ou contextos muito ruidosos, convém considerar versão protegida.`;
+  } else {
+    note.innerHTML = `A combinação escolhida respeita a hierarquia de marca e mantém leitura aceitável sem precisar de fallback estrutural.`;
+  }
 }
 
-const hexInput=document.getElementById('hexInput');
-const colorInput=document.getElementById('colorInput');
-function apply(){
-  let v=(hexInput.value||'').trim();
-  if(!v.startsWith('#')) v='#'+v;
-  if(!hexToRgb(v)) return alert('Hex inválido. Ex.: #3A7BD5');
-  hexInput.value=v.toUpperCase();
-  colorInput.value=v;
-  update(v);
+function analyze() {
+  const hexInput = document.getElementById("hexInput");
+  const colorInput = document.getElementById("colorInput");
+  const bg = normalizeHex(hexInput.value);
+
+  if (!isValidHex(bg)) {
+    alert("Insere uma cor HEX válida, por exemplo: #3A7BD5");
+    return;
+  }
+
+  hexInput.value = bg;
+  colorInput.value = bg;
+  updateUI(bg);
 }
-document.getElementById('applyBtn').addEventListener('click',apply);
-hexInput.addEventListener('keydown',e=>{if(e.key==='Enter') apply();});
-colorInput.addEventListener('input',e=>{hexInput.value=e.target.value.toUpperCase(); update(e.target.value);});
-document.querySelectorAll('.chip').forEach(btn=>btn.addEventListener('click',()=>{hexInput.value=btn.dataset.hex; colorInput.value=btn.dataset.hex; update(btn.dataset.hex);}));
-update('#FFD1DC');
+
+function buildSwatches() {
+  const wrap = document.getElementById("swatches");
+  QUICK_SWATCHES.forEach(hex => {
+    const btn = document.createElement("button");
+    btn.className = "swatch";
+    btn.style.background = hex;
+    btn.title = hex;
+    btn.addEventListener("click", () => {
+      document.getElementById("hexInput").value = hex;
+      document.getElementById("colorInput").value = hex;
+      updateUI(hex);
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+document.getElementById("runBtn").addEventListener("click", analyze);
+document.getElementById("hexInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") analyze();
+});
+document.getElementById("colorInput").addEventListener("input", e => {
+  const hex = normalizeHex(e.target.value);
+  document.getElementById("hexInput").value = hex;
+  updateUI(hex);
+});
+
+buildSwatches();
+updateUI("#3A7BD5");
 </script>
 </body>
 </html>
