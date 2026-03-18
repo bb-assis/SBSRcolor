@@ -407,7 +407,7 @@ function classify(contrastA, contrastB) {
 
   if (minC >= 4.5) return { label: "Excelente", value: 100, color: "#2e7d32", critical: false };
   if (maxC >= 4.5 && minC >= 3) return { label: "Bom", value: 75, color: "#7cb342", critical: false };
-  if (minC >= 3) return { label: "Sensível", value: 50, color: "#ef6c00", critical: false };
+  if (minC >= 3) return { label: "Condicional", value: 50, color: "#ef6c00", critical: false };
   return { label: "Crítico", value: 25, color: "#c62828", critical: true };
 }
 
@@ -491,8 +491,8 @@ function updateUI(bg) {
     note.innerHTML = `Nenhuma combinação preferencial, alternativa ou monocromática saiu da zona crítica para este fundo. A recomendação aqui é <strong>não usar aplicação direta</strong>. Usa versão protegida, badge sólido ou intervenção no fundo.`;
   } else if (rec.strategy === "Solução monocromática") {
     note.innerHTML = `As combinações bicolor preferenciais e alternativas entraram em zona crítica. A melhor saída foi uma <strong>solução monocromática</strong>, porque evita um dos blocos abaixo da linha mínima de contraste.`;
-  } else if (rec.quality.label === "Sensível") {
-    note.innerHTML = `A combinação escolhida é usável, mas está numa zona sensível. Para peças pequenas, ecrãs de baixa qualidade ou contextos muito ruidosos, convém considerar versão protegida.`;
+  } else if (rec.quality.label === "Condicional") {
+    note.innerHTML = `aplicação legível e válida, podendo requerer atenção em contextos mais exigentes (ex. tamanhos reduzidos, ecrãs de baixa qualidade ou fundos complexos).`;
   } else {
     note.innerHTML = `A combinação escolhida respeita a hierarquia de marca e mantém leitura aceitável sem precisar de fallback estrutural.`;
   }
